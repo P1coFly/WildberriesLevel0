@@ -24,7 +24,7 @@ func main() {
 	defer sc.Close()
 
 	// Путь к JSON файлу
-	filePath := "Script/model.json"
+	filePath := "scripts/model.json"
 
 	// Чтение JSON файла
 	jsonData, err := readJSONFile(filePath)
