@@ -2,13 +2,11 @@ package db_module
 
 import (
 	"database/sql"
-	"log"
 	"myproject/internal/models"
 )
 
 func AddOrder(db *sql.DB, order models.Order) {
 	var idxDelivary = addDelivary(db, order.Delivery)
-	log.Println(idxDelivary)
 
 	addPayment(db, order.Payment)
 
@@ -40,7 +38,6 @@ func addDelivary(db *sql.DB, delivery models.Delivery) int {
 }
 
 func addPayment(db *sql.DB, payment models.Payment) {
-
 	_, err := db.Exec(`INSERT INTO public."PAYMENTS" (transaction,request_id,currency,provider,amount,payment_dt,bank,delivery_cost,goods_total,custom_fee)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
 		payment.Transaction, payment.RequestID, payment.Currency, payment.Provider, payment.Amount, payment.PaymentDT,
@@ -51,8 +48,6 @@ func addPayment(db *sql.DB, payment models.Payment) {
 }
 
 func addItems(db *sql.DB, items []models.Item) {
-	log.Println(items)
-
 	for _, item := range items {
 
 		_, err := db.Exec(`INSERT INTO public."ITEMS" (chrt_id,track_number,price,rid,name,sale,size,total_price,nm_id,brand,status)
