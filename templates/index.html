@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Page</title>
+    <link href="/static/styles.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Order Page</h1>
+    <form id="orderForm">
+        <label for="uid">UID:</label>
+        <input type="text" id="uid" name="uid" required>
+        <button type="button" onclick="postOrder()">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function postOrder() {
+            var uid = document.getElementById("uid").value;
+
+            fetch('/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(uid),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = "<pre>" + syntaxHighlight(JSON.stringify(data, null, 2)) + "</pre>";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("result").innerText = 'Order not found';
+            });
+        }
+
+        function syntaxHighlight(json) {
+            // Подсветка ключей JSON
+            json = json.replace(/"(\w+)"\s*:/g, '"<span class="json-key">$1</span>":');
+            return json;
+        }
+    </script>
+</body>
+</html>

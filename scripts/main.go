@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	stan "github.com/nats-io/stan.go"
@@ -24,36 +25,62 @@ func main() {
 	defer sc.Close()
 
 	// Путь к JSON файлу
-	filePath := "scripts/model.json"
-
-	// Чтение JSON файла
-	jsonData, err := readJSONFile(filePath)
+	jsonFiles, err := getJSONFiles("scripts/")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Отправка JSON данных в канал
-	err = sc.Publish(channelName, jsonData)
-	if err != nil {
-		log.Fatal(err)
-	}
+	for _, jsonFile := range jsonFiles {
+		// Чтение JSON файла
+		jsonData, err := readJSONFile(jsonFile)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	parts := strings.Split(filePath, "/")
-	log.Printf("JSON data: %s - sent to channel: %s\n", parts[len(parts)-1], channelName)
+		// Отправка JSON данных в канал
+		err = sc.Publish(channelName, jsonData)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		parts := strings.Split(jsonFile, "/")
+		log.Printf("JSON data: %s - sent to channel: %s\n", parts[len(parts)-1], channelName)
+	}
 }
 
-func readJSONFile(filePath string) ([]byte, error) {
-	file, err := os.Open(filePath)
+// readJSONFile считывает содержимое JSON файла по указанному пути.
+// Возвращает считанные данные в виде среза байтов.
+func readJSONFile(jsonFile string) ([]byte, error) {
+	file, err := os.Open(jsonFile)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	// Используем ioutil.ReadAll для чтения файла
 	jsonData, err := io.ReadAll(file)
 	if err != nil {
 		return nil, err
 	}
 
 	return jsonData, nil
+}
+
+// getJSONFiles возвращает список путей ко всем файлам с расширением .json в указанной директории.
+// Использует ioutil.ReadDir для чтения только файлов в указанной директории.
+// Возвращаемый срез содержит абсолютные пути ко всем найденным JSON файлам.
+func getJSONFiles(dirPath string) ([]string, error) {
+	var jsonFiles []string
+
+	files, err := os.ReadDir(dirPath)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range files {
+		if !file.IsDir() && strings.HasSuffix(file.Name(), ".json") {
+			jsonFiles = append(jsonFiles, filepath.Join(dirPath, file.Name()))
+		}
+	}
+
+	return jsonFiles, nil
 }
