@@ -42,10 +42,10 @@ button:hover {
     margin-top: 20px;
     padding: 10px;
     background-color: #2c2f33;
-    color: #ffffff;
+    color: #bb86fc;
     border: 1px solid #3a3d41;
 }
 
 .json-key {
-    color: #50c878; /* Цвет для ключей JSON, например, зеленый */
+    color: #50c878; 
 }

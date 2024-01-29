@@ -38,8 +38,8 @@
         }
 
         function syntaxHighlight(json) {
-            // Подсветка ключей JSON
-            json = json.replace(/"(\w+)"\s*:/g, '"<span class="json-key">$1</span>":');
+            // Подсветка ключей и значений JSON
+            json = json.replace(/"(\w+)"\s*:/g, '<span class="json-key">"$1"</span>:');
             return json;
         }
     </script>
