@@ -13,6 +13,7 @@ import (
 
 	_ "github.com/lib/pq"
 	stan "github.com/nats-io/stan.go"
+	"github.com/patrickmn/go-cache"
 )
 
 func main() {
@@ -26,6 +27,10 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+
+	orderCache := cache.New(-1, -1)
+
+	initializingCache(orderCache, db)
 
 	// Параметры подключения к NATS Streaming
 	clusterID := "orders-cluster"
@@ -50,6 +55,13 @@ func main() {
 		}
 		log.Printf("Received message: %+v\n", order)
 		modelsDB.AddOrder(db, order)
+		orderCache.Set(order.OrderUID, order, cache.NoExpiration)
+
+		ord, found := orderCache.Get(order.OrderUID)
+		if found {
+			log.Print("FROM CACHE:")
+			log.Println(ord)
+		}
 
 	})
 	if err != nil {
@@ -67,4 +79,32 @@ func main() {
 	<-sigCh
 
 	log.Println("Exiting...")
+}
+
+func initializingCache(orderCache *cache.Cache, db *sql.DB) {
+	uids, err := modelsDB.GetUids(db)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for _, uid := range uids {
+		order, err := modelsDB.GetOrderByUID(db, uid)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		log.Println(order)
+
+		orderCache.Set(order.OrderUID, order, cache.NoExpiration)
+
+		ord, found := orderCache.Get(order.OrderUID)
+		if found {
+			log.Print("FROM CACHE:")
+			log.Println(ord)
+		}
+	}
+
+	log.Printf("Восстановление данных из БД в кэш ... записей найдено (%v)\n", len(orderCache.Items()))
+
 }
