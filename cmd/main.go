@@ -24,7 +24,7 @@ func main() {
 	connStr := "user=wb_service password=12345678 dbname=WB sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 	defer db.Close()
 	log.Println("Connection to the database - successful")
