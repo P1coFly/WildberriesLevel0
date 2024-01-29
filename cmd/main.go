@@ -105,6 +105,4 @@ func initializingCache(orderCache *cache.Cache, db *sql.DB) {
 		}
 	}
 
-	log.Printf("Восстановление данных из БД в кэш ... записей найдено (%v)\n", len(orderCache.Items()))
-
 }
