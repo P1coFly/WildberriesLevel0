@@ -1,0 +1,49 @@
+{
+    "order_uid": "b133jul7b2b84b6test",
+    "track_number": "WTOMMTESTTRACK",
+    "entry": "WBIL",
+    "delivery": {
+      "name": "Artem Mikhaylov",
+      "phone": "+9721111111",
+      "zip": "2639123",
+      "city": "Moscow",
+      "address": "15 Parkovaya",
+      "region": "Moscow",
+      "email": "test@mail.ru"
+    },
+    "payment": {
+      "transaction": "b133jul7b2b84b6test",
+      "request_id": "",
+      "currency": "USD",
+      "provider": "wbpay",
+      "amount": 1000,
+      "payment_dt": 1637907727,
+      "bank": "alpha",
+      "delivery_cost": 900,
+      "goods_total": 100,
+      "custom_fee": 0
+    },
+    "items": [
+      {
+        "chrt_id": 1234930,
+        "track_number": "WTOMMTESTTRACK",
+        "price": 100,
+        "rid": "tg1234087a764ae0btest",
+        "name": "Oposym",
+        "sale": 0,
+        "size": "0",
+        "total_price": 100,
+        "nm_id": 9876212,
+        "brand": "WB",
+        "status": 202
+      }
+    ],
+    "locale": "en",
+    "internal_signature": "",
+    "customer_id": "root",
+    "delivery_service": "meest",
+    "shardkey": "9",
+    "sm_id": 11,
+    "date_created": "2021-10-26T01:22:19Z",
+    "oof_shard": "1"
+  }

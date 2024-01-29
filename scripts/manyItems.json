@@ -1,0 +1,62 @@
+{
+    "order_uid": "a777jan7b2b84b6test",
+    "track_number": "ARTEMTESTTRACK",
+    "entry": "WBIL",
+    "delivery": {
+      "name": "Root Rootov",
+      "phone": "+9722222222",
+      "zip": "1234567",
+      "city": "Kiryat Mozkin",
+      "address": "Voikovskoe shosse 17",
+      "region": "Kraiot",
+      "email": "ya@yandex.ru"
+    },
+    "payment": {
+      "transaction": "a777jan7b2b84b6test",
+      "request_id": "",
+      "currency": "USD",
+      "provider": "wbpay",
+      "amount": 710,
+      "payment_dt": 1637901111,
+      "bank": "alpha",
+      "delivery_cost": 500,
+      "goods_total": 210,
+      "custom_fee": 0
+    },
+    "items": [
+      {
+        "chrt_id": 1156321,
+        "track_number": "ARTEMTESTTRACK",
+        "price": 100,
+        "rid": "cd1234567a764ae0btest",
+        "name": "MLolik",
+        "sale": 30,
+        "size": "0",
+        "total_price": 70,
+        "nm_id": 2398121,
+        "brand": "Abibas",
+        "status": 202
+      },
+      {
+        "chrt_id": 2211331,
+        "track_number": "ARTEMTESTTRACK",
+        "price": 200,
+        "rid": "ab4219087a764ae0btest",
+        "name": "Jolik",
+        "sale": 30,
+        "size": "0",
+        "total_price": 140,
+        "nm_id": 3211212,
+        "brand": "Oreshki",
+        "status": 202
+      }
+    ],
+    "locale": "en",
+    "internal_signature": "",
+    "customer_id": "test",
+    "delivery_service": "meest",
+    "shardkey": "9",
+    "sm_id": 23,
+    "date_created": "2021-11-28T08:21:18Z",
+    "oof_shard": "1"
+  }
