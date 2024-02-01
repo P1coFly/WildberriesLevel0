@@ -3,12 +3,15 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	modelsDB "myproject/internal/db"
 	models "myproject/internal/models"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	stan "github.com/nats-io/stan.go"
 	"github.com/patrickmn/go-cache"
@@ -16,12 +19,20 @@ import (
 
 var orderCache *cache.Cache
 
+func init() {
+
+	if err := godotenv.Load(); err != nil {
+		log.Panic("No .env file found")
+	}
+}
+
 func main() {
 
 	log.Println("Start program")
 
 	// Подключение к бд
-	connStr := "user=wb_service password=12345678 dbname=WB sslmode=disable"
+	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", os.Getenv("USER_DB"),
+		os.Getenv("PASSWORD_DB"), os.Getenv("NAME_DB"))
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
@@ -36,7 +47,7 @@ func main() {
 	log.Printf("----%v records have been added to the cache from the database----\n", len(orderCache.Items()))
 
 	// Параметры подключения к NATS Streaming
-	clusterID := "orders-cluster"
+	clusterID := os.Getenv("CLUSTER_ID")
 	clientID := "json-consumer"
 	channelName := "json-channel"
 	natsURL := "nats://localhost:4222"
@@ -81,7 +92,7 @@ func main() {
 	log.Println("Waiting for a message...")
 
 	//подниммаем http-сервер
-	log.Print("Server start listening on localhost:8080")
+	log.Print("Server start listening on localhost:8080/order")
 	fileServer := http.FileServer(http.Dir("../static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fileServer))
 	http.HandleFunc("/order", orderHandler)
@@ -127,7 +138,7 @@ func orderHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getOrder(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../templates/index.html")
+	http.ServeFile(w, r, "templates/index.html")
 }
 
 func postOrder(w http.ResponseWriter, r *http.Request) {

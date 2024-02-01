@@ -7,12 +7,20 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/joho/godotenv"
 	stan "github.com/nats-io/stan.go"
 )
 
+func init() {
+
+	if err := godotenv.Load(); err != nil {
+		log.Panic("No .env file found")
+	}
+}
+
 func main() {
 	// Параметры подключения к NATS Streaming
-	clusterID := "orders-cluster"
+	clusterID := os.Getenv("CLUSTER_ID")
 	clientID := "json-producer"
 	channelName := "json-channel"
 	natsURL := "nats://localhost:4222"
